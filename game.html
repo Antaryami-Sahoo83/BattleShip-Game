@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battleship</title>
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+        .container {
+            width: 800px;
+            height: 650px;
+            background-color: rgba(185, 47, 13, 0.832);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 100px auto 0px;
+        }
+        h1 {
+            text-decoration: 2px rgb(65, 65, 127) underline;
+            font-size: 50px;
+            font-weight: 900;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            box-shadow: 0px 0px 15px 10px rgba(58, 53, 53, 0.8);
+        }
+        .grid-item {
+            background-color: rgba(195, 36, 36, 0.8);
+            border: 2px solid rgba(246, 240, 240, 0.8);
+            outline: 2px solid rgba(246, 240, 240, 0.8);
+            padding: 50px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .btn {
+            margin: 30px auto;
+            padding: 10px 20px;
+            color: #000000;
+            font-size: 25px;
+            font-weight: 700;
+            background-color: rgba(195, 36, 36, 0.8);
+            box-shadow: 4px 4px #04b4ff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Battleship</h1>
+        <div class="grid-container">
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="ship"></div>
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="ship"></div>
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="ship"></div>
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="ship"></div>
+            <div class="grid-item" data-type="water"></div>
+            <div class="grid-item" data-type="ship"></div>
+            <div class="grid-item" data-type="water"></div>
+        </div>
+        <button class="btn">Reset</button>
+    </div>
+    <script>
+        const shipImage = 'https://ucarecdn.com/ec668e99-6be4-42f9-aa7c-6a92c049353c/';
+        const waterImage = 'https://ucarecdn.com/88b392a4-eb2d-4b7c-aa8e-ae4a4ece891b/';
+
+        let clicks = 0;
+        let shipsFound = 0;
+
+        function showPic(event) {
+            const cell = event.target;
+            if (cell.classList.contains('revealed')) {
+                return;
+            }
+            cell.classList.add('revealed');
+            const type = cell.getAttribute('data-type');
+            cell.style.backgroundImage = `url(${type === 'ship' ? shipImage : waterImage})`;
+            cell.style.backgroundSize = 'cover';
+            clicks++;
+            if (type === 'ship') {
+                shipsFound++;
+            }
+            checkGameStatus();
+        }
+
+        function checkGameStatus() {
+            if (shipsFound === 5) {
+                setTimeout(() => alert('You win!'), 100);
+            } else if (clicks >= 8) {
+                setTimeout(() => alert('You lose!'), 100);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.btn').addEventListener('click', () => {
+                clicks = 0;
+                shipsFound = 0;
+                document.querySelectorAll('.grid-item').forEach(cell => {
+                    cell.classList.remove('revealed');
+                    cell.style.backgroundImage = '';
+                });
+            });
+
+            document.querySelectorAll('.grid-item').forEach(cell => {
+                cell.addEventListener('click', showPic);
+            });
+        });
+    </script>
+</body>
+</html>
